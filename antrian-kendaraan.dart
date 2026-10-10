@@ -29,6 +29,11 @@ void main() {
     print("5. Exit");
     print("====================================");
 
+    //  stdout.write("Pilih menu: ");
+
+    // String? input = stdin.readLineSync();
+    // int? pilihan = int.tryParse(input ?? "");
+
     int? pilihan;
 
 while (pilihan == null) {
@@ -36,7 +41,7 @@ while (pilihan == null) {
   pilihan = int.tryParse(stdin.readLineSync() ?? '');
 
   if (pilihan == null || pilihan < 1 || pilihan > 5) {
-    print('Masukkan angka 1 sampai 4.');
+    print('Masukkan angka 1 sampai 5.');
     pilihan = null;
   }
 }
