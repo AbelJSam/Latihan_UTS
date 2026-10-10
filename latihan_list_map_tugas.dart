@@ -1,52 +1,49 @@
 import 'dart:io';
-
 /// LATIHAN LIST DAN MAP: DAFTAR TUGAS HARIAN
 ///
-/// Kasus: buat program sederhana untuk mengelola tugas.
 /// Setiap tugas disimpan sebagai Map dengan kunci:
 /// - 'judul' (String)
 /// - 'prioritas' (String)
 /// - 'selesai' (bool)
-/// Semua tugas disimpan berurutan dalam sebuah List.
 ///
-/// Petunjuk: selesaikan TODO dari atas ke bawah.
-/// Jalankan dengan: dart latihan_list_map_tugas.dart
+/// List menyimpan banyak Map tugas secara berurutan.
 void main() {
-  // TODO 1: Buat List<Map<String, dynamic>> bernama daftarTugas = [].
-  // List ini menjadi tempat menyimpan semua Map tugas.
-
+  // final menjaga variabel daftarTugas tetap menunjuk ke List ini.
+  // Isi List tetap boleh ditambah, diubah, dan dihapus.
+  final List<Map<String, dynamic>> daftarTugas = [];
   bool jalan = true;
 
-  // Selama jalan bernilai true, menu akan terus ditampilkan.
+  // Menu diulang sampai pengguna memilih pilihan 5.
   while (jalan) {
     tampilkanMenu();
     final int? pilihan = bacaAngka('Pilih menu (1-5): ');
 
-    // TODO 2: Lengkapi setiap case dengan memanggil fungsi yang sesuai.
+    // switch memilih fitur yang dijalankan berdasarkan input pengguna.
     switch (pilihan) {
       case 1:
-        // TODO: panggil tambahTugas(daftarTugas)
+        tambahTugas(daftarTugas);
         break;
       case 2:
-        // TODO: panggil tampilkanTugas(daftarTugas)
+        tampilTugas(daftarTugas);
         break;
       case 3:
-        // TODO: panggil tandaiTugasSelesai(daftarTugas)
+        tugasSelesai(daftarTugas);
         break;
       case 4:
-        // TODO: panggil hapusTugas(daftarTugas)
+        hapusTugas(daftarTugas);
         break;
       case 5:
         jalan = false;
         print('Program selesai.');
         break;
       default:
+        // Juga menangani input yang bukan angka karena pilihan akan null.
         print('Pilihan tidak valid. Masukkan angka 1 sampai 5.');
     }
   }
 }
 
-/// Menampilkan pilihan menu kepada pengguna.
+/// Menampilkan semua pilihan yang tersedia.
 void tampilkanMenu() {
   print('\n=== DAFTAR TUGAS HARIAN ===');
   print('1. Tambah tugas');
@@ -56,35 +53,120 @@ void tampilkanMenu() {
   print('5. Keluar');
 }
 
-/// Membaca angka dari terminal; hasilnya null jika input bukan angka.
+/// Membaca angka dari terminal; mengembalikan null jika input bukan angka.
 int? bacaAngka(String pesan) {
   stdout.write(pesan);
   return int.tryParse(stdin.readLineSync()?.trim() ?? '');
 }
 
-// TODO 3: Buat fungsi tambahTugas(List<Map<String, dynamic>> daftarTugas).
-// - Minta judul tugas dan pastikan tidak kosong.
-// - Minta prioritas: rendah, sedang, atau tinggi.
-// - Tambahkan Map ke List, contohnya:
-//   {'judul': judul, 'prioritas': prioritas, 'selesai': false}
-// - Gunakan daftarTugas.add(...).
+/// Meminta detail tugas dan menambahkan satu Map ke dalam List.
+void tambahTugas(List<Map<String, dynamic>> daftarTugas) {
+  stdout.write('Masukkan judul tugas: ');
+  final String judul = (stdin.readLineSync() ?? '').trim();
 
-// TODO 4: Buat fungsi tampilkanTugas(...).
-// - Jika List kosong, tampilkan pesan bahwa belum ada tugas.
-// - Jika ada tugas, gunakan for untuk membaca tiap Map.
-// - Tampilkan nomor (indeks + 1), judul, prioritas, dan status.
-// - Status bisa dibuat dari nilai bool:
-//   tugas['selesai'] == true ? 'Selesai' : 'Belum selesai'
+  if (judul.isEmpty) {
+    print('Judul tugas tidak boleh kosong.');
+    return;
+  }
 
-// TODO 5: Buat fungsi tandaiTugasSelesai(...).
-// - Tampilkan daftar tugas terlebih dahulu.
-// - Minta nomor tugas yang ingin ditandai selesai.
-// - Validasi nomor agar berada antara 1 dan daftarTugas.length.
-// - Ubah nilai pada Map yang dipilih:
-//   daftarTugas[nomor - 1]['selesai'] = true;
+  // Hindari tugas dengan judul sama, tanpa membedakan kapitalisasi.
+  final bool sudahAda = daftarTugas.any(
+    (tugas) => (tugas['judul'] as String).toLowerCase() == judul.toLowerCase(),
+  );
+  if (sudahAda) {
+    print('Tugas dengan judul tersebut sudah ada.');
+    return;
+  }
 
-// TODO 6: Buat fungsi hapusTugas(...).
-// - Tampilkan daftar tugas terlebih dahulu.
-// - Minta nomor tugas yang akan dihapus dan validasi nomornya.
-// - Hapus tugas memakai daftarTugas.removeAt(nomor - 1).
-// - Jelaskan pada komentar mengapa nomor dikurangi 1.
+  print('Pilih prioritas: 1. Rendah | 2. Sedang | 3. Tinggi');
+  final int? pilihanPrioritas = bacaAngka('Prioritas (1-3): ');
+
+  if (pilihanPrioritas == null || pilihanPrioritas < 1 || pilihanPrioritas > 3) {
+    print('Prioritas tidak valid. Masukkan angka 1, 2, atau 3.');
+    return;
+  }
+
+  // Simpan label prioritas sebagai teks agar mudah dibaca saat ditampilkan.
+  final String prioritas = switch (pilihanPrioritas) {
+    1 => 'Rendah',
+    2 => 'Sedang',
+    3 => 'Tinggi',
+    _ => 'Rendah', // Tidak tercapai karena input sudah divalidasi.
+  };
+
+  // Satu Map menyimpan tiga informasi untuk satu tugas.
+  daftarTugas.add({
+    'judul': judul,
+    'prioritas': prioritas,
+    'selesai': false,
+  });
+
+  print('Tugas "$judul" berhasil ditambahkan.');
+}
+
+/// Menampilkan tugas dengan nomor urut yang dimulai dari 1.
+void tampilTugas(List<Map<String, dynamic>> daftarTugas) {
+  if (daftarTugas.isEmpty) {
+    print('Belum ada tugas dalam daftar.');
+    return;
+  }
+
+  print('\n--- DAFTAR TUGAS ---');
+  for (int i = 0; i < daftarTugas.length; i++) {
+    final Map<String, dynamic> tugas = daftarTugas[i];
+    // Nilai bool pada Map diubah menjadi status yang mudah dibaca.
+    final String status = tugas['selesai'] == true ? 'Selesai' : 'Belum selesai';
+
+    // Indeks List dimulai dari 0, jadi nomor tampilan menggunakan i + 1.
+    print(
+      '${i + 1}. ${tugas['judul']} | '
+      'Prioritas: ${tugas['prioritas']} | Status: $status',
+    );
+  }
+}
+
+/// Mengubah status tugas yang dipilih menjadi selesai.
+void tugasSelesai(List<Map<String, dynamic>> daftarTugas) {
+  if (daftarTugas.isEmpty) {
+    print('Belum ada tugas yang bisa ditandai selesai.');
+    return;
+  }
+
+  tampilTugas(daftarTugas);
+  final int? nomor = bacaAngka('Nomor tugas yang sudah selesai: ');
+
+  if (nomor == null || nomor < 1 || nomor > daftarTugas.length) {
+    print('Nomor tidak valid. Pilih nomor yang ada pada daftar.');
+    return;
+  }
+
+  // Kurangi 1 karena nomor untuk pengguna mulai dari 1, indeks List dari 0.
+  final Map<String, dynamic> tugas = daftarTugas[nomor - 1];
+  if (tugas['selesai'] == true) {
+    print('Tugas "${tugas['judul']}" memang sudah berstatus selesai.');
+    return;
+  }
+
+  tugas['selesai'] = true;
+  print('Tugas "${tugas['judul']}" ditandai selesai.');
+}
+
+/// Menghapus tugas berdasarkan nomor yang ditampilkan.
+void hapusTugas(List<Map<String, dynamic>> daftarTugas) {
+  if (daftarTugas.isEmpty) {
+    print('Belum ada tugas yang bisa dihapus.');
+    return;
+  }
+
+  tampilTugas(daftarTugas);
+  final int? nomor = bacaAngka('Nomor tugas yang ingin dihapus: ');
+
+  if (nomor == null || nomor < 1 || nomor > daftarTugas.length) {
+    print('Nomor tidak valid. Pilih nomor yang ada pada daftar.');
+    return;
+  }
+
+  // removeAt menerima indeks mulai dari 0, maka nomor dikurangi 1.
+  final Map<String, dynamic> tugasDihapus = daftarTugas.removeAt(nomor - 1);
+  print('Tugas "${tugasDihapus['judul']}" berhasil dihapus.');
+}
