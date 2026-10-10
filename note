@@ -1,16 +1,7 @@
 import 'dart:io';
 
-/// LATIHAN LIST DAN MAP: INVENTARIS ALAT TULIS
-///
-/// Petunjuk:
-/// 1. Selesaikan TODO satu per satu.
-/// 2. Satu barang disimpan sebagai Map dengan kunci:
-///    'nama' (String), 'stok' (int), dan 'harga' (int).
-/// 3. Semua barang disimpan berurutan dalam List `inventaris`.
-/// 4. Jalankan program dengan: dart latihan_list_map.dart
-
 void main() {
-  // TODO 1: Buat List<Map<String, dynamic>> bernama inventaris dan isi dengan [].
+  // Buat List<Map<String, dynamic>> bernama inventaris dan isi dengan [].
 
   bool jalan = true;
 
@@ -20,19 +11,19 @@ void main() {
 
     switch (pilihan) {
       case 1:
-        // TODO 2: Panggil fungsi tambahBarang(inventaris).
+        //tambahBarang(inventaris);
         break;
       case 2:
-        // TODO 3: Panggil fungsi tampilkanInventaris(inventaris).
+
         break;
       case 3:
-        // TODO 4: Panggil fungsi cariBarang(inventaris).
+
         break;
       case 4:
-        // TODO 5: Panggil fungsi ubahStok(inventaris).
+
         break;
       case 5:
-        // TODO 6: Panggil fungsi hapusBarang(inventaris).
+
         break;
       case 6:
         jalan = false;
@@ -59,28 +50,3 @@ int? bacaAngka(String pesan) {
   stdout.write(pesan);
   return int.tryParse(stdin.readLineSync() ?? '');
 }
-
-// TODO 7: Buat fungsi tambahBarang(List<Map<String, dynamic>> inventaris).
-// Minta nama, stok awal, dan harga barang.
-// Jika input valid, tambahkan Map seperti:
-// {'nama': nama, 'stok': stok, 'harga': harga}
-// ke List menggunakan inventaris.add(...).
-
-// TODO 8: Buat fungsi tampilkanInventaris(...).
-// Jika List kosong, tampilkan pesan.
-// Jika ada isinya, gunakan for untuk mencetak nomor, nama, stok, dan harga.
-// Ingat: indeks List mulai dari 0, tetapi nomor tampilan biasanya mulai dari 1.
-
-// TODO 9: Buat fungsi cariBarang(...).
-// Minta nama barang, lalu telusuri List dengan for.
-// Bandingkan nama tanpa membedakan huruf besar/kecil menggunakan
-// toLowerCase(). Tampilkan detail barang jika ditemukan.
-
-// TODO 10: Buat fungsi ubahStok(...).
-// Minta nama barang dan stok baru. Jika ditemukan, ubah nilai Map:
-// barang['stok'] = stokBaru;
-
-// TODO 11: Buat fungsi hapusBarang(...).
-// Minta nomor barang yang terlihat pada daftar.
-// Validasi nomor, lalu hapus dengan inventaris.removeAt(nomor - 1).
-// Mengapa indeksnya memakai nomor - 1?
